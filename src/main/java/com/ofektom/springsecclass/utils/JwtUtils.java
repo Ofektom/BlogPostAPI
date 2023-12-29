@@ -32,7 +32,7 @@ public class JwtUtils {
 
     private final Supplier<Date> expirationTime = ()-> Date
             .from(LocalDateTime.now()
-                    .plusMinutes(5).atZone(ZoneId.systemDefault()).toInstant());
+                    .plusMinutes(60).atZone(ZoneId.systemDefault()).toInstant());
     private <T> T extractClaims(String token, Function<Claims, T> claimResolver){
         final Claims claims = Jwts.parser()
                 .verifyWith(getKey.get())
@@ -59,4 +59,5 @@ public class JwtUtils {
                 .expiration(expirationTime.get())
                 .compact();
     };
+
 }

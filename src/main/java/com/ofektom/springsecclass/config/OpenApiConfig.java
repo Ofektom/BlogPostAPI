@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Configuration;
 )
 @OpenAPIDefinition(
         info = @Info(description = "A spring security rest Api",
-        title = "RestApi",
-        version = "v1")
+                title="RestApiSQ19",
+                version = "v1")
 )
 public class OpenApiConfig {
 }

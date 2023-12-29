@@ -7,14 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
+@Builder@AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
     private String username;
+    private String password;
     private String firstName;
     private String lastName;
-    private String password;
-    private Role role;
+    private Role userRole;
 
 }

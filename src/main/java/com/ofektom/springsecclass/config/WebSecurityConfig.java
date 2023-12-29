@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,8 +20,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-    private JwtAuthenticationFilter authentication;
+
     private UserServiceImpl userService;
+    private JwtAuthenticationFilter authentication;
 
     @Autowired
     public WebSecurityConfig(@Lazy UserServiceImpl userService, JwtAuthenticationFilter authentication) {
@@ -49,11 +49,21 @@ public class WebSecurityConfig {
     // from before "logging in" till after "logging out"
     public SecurityFilterChain httpSecurity (HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
-                .csrf(AbstractHttpConfigurer::disable)//Cross Site Request Forgery...disabling other sites from creating elements(like iframe or even other html elements) in your application.
-                .authorizeHttpRequests(httpRequest->
-                        httpRequest.requestMatchers( "/login", "/sign-up", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll()
-                                .requestMatchers("/index").authenticated())
-                .sessionManagement(sessionManagement ->
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(httpRequests->
+                        httpRequests
+                                .requestMatchers(
+                                        "/api/v1/likes/**",
+                                        "/api/v1/comments/**",
+                                        "/api/v1/sign-up",
+                                        "/swagger-ui/**",
+                                        "/swagger-ui.html",
+                                        "/v3/api-docs/**",
+                                        "/api/v1/google/**",
+                                        "/v3/api-docs.yaml",
+                                        "/api/v1/login").permitAll()
+                                .requestMatchers( "/api/v1/post/**","/api/v1/dashboard").authenticated())
+                .sessionManagement(sessionManagement->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authentication, UsernamePasswordAuthenticationFilter.class)
