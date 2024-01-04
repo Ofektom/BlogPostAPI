@@ -1,5 +1,7 @@
 package com.ofektom.springsecclass.serviceImpl;
 
+import com.ofektom.springsecclass.dto.EditPostRequestDto;
+import com.ofektom.springsecclass.dto.PostRequestDto;
 import com.ofektom.springsecclass.enums.Role;
 import com.ofektom.springsecclass.model.Post;
 import com.ofektom.springsecclass.model.Users;
@@ -14,6 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -55,6 +58,34 @@ public class PostServiceImpl {
     public void deletePostById(Long postId, Users currntUser) {
         currntUser.getAuthorities().contains(new SimpleGrantedAuthority(Role.ROLE_ADMIN.name()));
         postRepository.deleteById(postId);
+    }
+
+    public ResponseEntity<String> createPost(PostRequestDto postRequestDto, Long userId) {
+        Users optionalUser = this.userRepository.findById(userId).orElseThrow(() -> new RuntimeException("No user with ID " + userId + " found in my database"));
+
+
+        Post post = new Post();
+        post.setDescription(postRequestDto.getContent());
+        post.setTitle(postRequestDto.getPostTitle());
+        post.setUser(optionalUser);
+        Post post1 = this.postRepository.save(post);
+        return new ResponseEntity<>(post1.getTitle(), HttpStatus.CONFLICT);
+
+    }
+
+    public ResponseEntity<String> editPostContent(EditPostRequestDto editPostRequestDto, Long userId, Long postId) {
+        Post optionalPost = this.postRepository.findById(postId).orElseThrow(() -> new RuntimeException("No post with ID " + postId + " found in my database"));
+        Users optionalUser = this.userRepository.findById(userId).orElseThrow(() -> new RuntimeException("No user with ID " + userId + " found in my database"));
+
+
+        if (!optionalPost.getUser().equals(optionalUser)){
+            throw new RuntimeException("Please you can not edit this post simply because you were not the one that made the posted ");
+        }
+
+        optionalPost.setDescription(editPostRequestDto.getContent());
+        this.postRepository.save(optionalPost);
+
+        return new ResponseEntity<>("Post successfully editted", HttpStatus.OK  );
     }
 }
 

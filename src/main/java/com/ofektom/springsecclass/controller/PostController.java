@@ -1,5 +1,7 @@
 package com.ofektom.springsecclass.controller;
 
+import com.ofektom.springsecclass.dto.EditPostRequestDto;
+import com.ofektom.springsecclass.dto.PostRequestDto;
 import com.ofektom.springsecclass.model.Post;
 import com.ofektom.springsecclass.model.Users;
 import com.ofektom.springsecclass.serviceImpl.PostServiceImpl;
@@ -13,9 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@SecurityRequirement(name = "Bearer Authentication")
+//@CrossOrigin("*")
+//@SecurityRequirement(name = "Bearer Authentication")
 @RestController
-@PreAuthorize("hasRole('USER')")
+//@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 @RequestMapping("/api/v1/post")
 public class PostController {
     private PostServiceImpl postService;
@@ -24,10 +27,27 @@ public class PostController {
         this.postService = postService;
     }
 
-    @PostMapping("/save-post")
-    public ResponseEntity<Post> savePost(@Valid @RequestBody Post post, @AuthenticationPrincipal Users currentUser){
-        return postService.savePost(post, currentUser);
+//    @PostMapping("/save-post")
+//    public ResponseEntity<Post> savePost(Post post, @AuthenticationPrincipal Users currentUser){
+//        return postService.savePost(post, currentUser);
+//    }
+
+    @PostMapping("/create/{userId}")
+    public ResponseEntity<String> creatBlogPost(@RequestBody PostRequestDto postRequestDto, @PathVariable  Long userId ){
+     return postService.createPost(postRequestDto, userId);
     }
+
+    @PutMapping("/edit/{postId}/{userId}")
+    public ResponseEntity<String> editPost(@RequestBody EditPostRequestDto editPostRequestDto, @PathVariable Long postId, @PathVariable Long userId){
+        return postService.editPostContent(editPostRequestDto, userId, postId);
+    }
+
+
+
+
+
+
+
     @GetMapping("/all-post")
     public ResponseEntity<List<Post>> getAllPost(){
         return postService.getAllPost();

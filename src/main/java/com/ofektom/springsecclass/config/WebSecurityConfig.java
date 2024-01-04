@@ -55,6 +55,8 @@ public class WebSecurityConfig {
                                 .requestMatchers(
                                         "/api/v1/likes/**",
                                         "/api/v1/comments/**",
+                                        "/api/v1/post/**",
+                                        "/api/v1/post/edit/**",
                                         "/api/v1/sign-up",
                                         "/swagger-ui/**",
                                         "/swagger-ui.html",
@@ -62,7 +64,7 @@ public class WebSecurityConfig {
                                         "/api/v1/google/**",
                                         "/v3/api-docs.yaml",
                                         "/api/v1/login").permitAll()
-                                .requestMatchers( "/api/v1/post/**","/api/v1/dashboard").authenticated())
+                                .requestMatchers( "/api/v1/dashboard", "/api/v1/admin/**").authenticated())
                 .sessionManagement(sessionManagement->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

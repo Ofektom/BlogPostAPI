@@ -21,6 +21,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/")
 @Slf4j
@@ -57,8 +58,9 @@ public class AuthController {
     public ResponseEntity<UserDto> signUpUser(@RequestBody UserDto userDto){
         Users user = userService.saveUser.apply(userDto);
         UserDto userDto1 = new ObjectMapper().convertValue(user, UserDto.class);
-        return new ResponseEntity<>(userDto1, HttpStatus.CREATED);
+        return new ResponseEntity<>(userDto1, HttpStatus.OK);
     }
+
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginDto userDto){

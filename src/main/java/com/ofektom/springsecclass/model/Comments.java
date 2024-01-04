@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class Comments {
 
     @JsonIgnore
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Like> likes;
+    private List<Like> likes = new ArrayList<>();
 
     @Column(name = "commentDate")
     @Temporal(TemporalType.TIMESTAMP)

@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/api/v1/admin")
 @SecurityRequirement(name = "Bearer Authentication")
@@ -22,6 +23,12 @@ public class AdminController {
     public AdminController(UserServiceImpl userService, PostServiceImpl postService) {
         this.userService = userService;
         this.postService = postService;
+    }
+
+    @GetMapping("/admin-dashboard")
+    @SecurityRequirement(name = "Bearer Authentication")
+    public String index(){
+        return "Welcome to admin dashboard";
     }
 
     @PostMapping("/ban-user/{userId}")

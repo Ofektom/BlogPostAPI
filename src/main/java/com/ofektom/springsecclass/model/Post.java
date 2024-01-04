@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -37,11 +38,11 @@ public class Post {
 
     @JsonIgnore
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Comments> comments;
+    private List<Comments> comments = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Like> likes;
+    private List<Like> likes = new ArrayList<>();
 
     @Column(name = "postDate")
     @Temporal(TemporalType.TIMESTAMP)
